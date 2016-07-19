@@ -1,0 +1,2 @@
+#!/bin/sh
+pg_ctl -D slack-tip-of-the-day -l logfile start
