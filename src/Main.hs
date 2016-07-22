@@ -20,7 +20,10 @@ module Main where
         token <- getEnv "SLACK_TOKEN"
         publicDirectory <- findPublicDirectory
         connection <- PG.connectPostgreSQL $ cs dbConfig
-        deliverTips <- async (App.deliverTips connection)
+        deliverTips <- async $ forever $ do
+            let oneHour = 3600000000
+            App.deliverTips connection
+            threadDelay oneHour
         putStrLn $ "Listening on port " <> tshow port
         App.run publicDirectory connection (read port) (SlackApiCredentials (cs clientId) (cs clientSecret) (cs token)) (fromMaybe Production $ read `fmap` environment)
 

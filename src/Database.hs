@@ -26,6 +26,10 @@ module Database where
     saveChannel connection teamId channelId webhookUrl =
         execute connection "INSERT INTO channels (id, teamId, webhookUrl) VALUES (?, ?, ?)" (channelId, teamId, webhookUrl)
 
+    updateChannel connection teamId channelId webhookUrl = do
+        execute connection "UPDATE channels SET webhookUrl = ? WHERE teamId = ? AND id = ?" (webhookUrl, teamId, channelId)
+        return ()
+
     addTip :: Connection -> Text -> Text -> Text -> Text -> IO ()
     addTip connection teamId userId channelId content = do
         execute connection "INSERT INTO tips (userId, channelId, content) VALUES (?, ?, ?)" (userId, channelId, content)

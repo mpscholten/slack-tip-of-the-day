@@ -58,7 +58,7 @@ module App where
                     existingChannel <- Database.findChannelByTeamIdAndChannelId connection teamId channelId
                     case existingChannel of
                         Just existingChannel ->
-                            return ()
+                            Database.updateChannel connection teamId channelId webhookUrl
                         Nothing ->
                             do
                                 Database.saveChannel connection teamId channelId webhookUrl
@@ -106,13 +106,13 @@ module App where
         let markAsDelivered = Database.markAsDelivered connection
         channels <- findChannels
         forM_ channels $ \channel -> do
+            let channelId = Database.channelId channel
             delivered <- alreadyDelivered channel
             if delivered then
-                putStrLn $ "Channel " <> (tshow $ Database.channelId channel) <> " got already delivered "
+                putStrLn $ "Channel " <> (tshow channelId) <> " got already delivered "
             else
                 do
-                    let channelId = Database.channelId channel
-                    putStrLn $ "Channel " <> (tshow $ Database.channelId channel) <> " will be delivered "
+                    putStrLn $ "Channel " <> (tshow channelId) <> " will be delivered "
                     tip <- getRandomTip channelId
                     case tip of
                         Just tip ->
