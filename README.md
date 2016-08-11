@@ -3,8 +3,8 @@ Share Small Bits Of Knowledge With Your Team, daily.
 
 ## Usage
 1. [Add to your slack room](https://slack-tip-of-the-day.mpscholten.de/)
-2. Everyone in the channel can add some tips via `/tipoftheday-add You can use X to archieve Y`.
-3. Every day one random tip will posted inside your slack room.
+2. Everyone in the channel can add some tips via `/tipoftheday-add You can use X to archieve Y`
+3. Every day one random tip will posted inside your slack room
 
 ## Hacking
 
