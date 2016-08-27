@@ -77,7 +77,7 @@ module App where
                     let channelId = cs $ fromJust $ lookup "channel_id" params
                     let tip = cs $ fromJust $ lookup "text" params
                     addTip teamId userId channelId tip
-                    respond $ responseLBS status200 [("Content-Type", "text/plain")] "done"
+                    respond $ responseLBS status200 [("Content-Type", "text/plain")] "The tip was added sucessfully :)"
                 where
                     addTip = Database.addTip connection
 
@@ -101,7 +101,7 @@ module App where
                     tips <- getTipsByUser userId channelId
                     let selectedTip = fromJust $ lookup tipNumber $ zip [1..] tips
                     Database.deleteTip connection channelId userId (Database.tipId selectedTip)
-                    respond $ responseLBS status200 [("Content-Type", "text/plain")] ("_Tips added by you:_\n" <> (cs $ intercalate "\n" (map (\(id, content) -> tshow id <> ": " <> Database.tipContent content) $ zip [1..] tips)))
+                    respond $ responseLBS status200 [("Content-Type", "text/plain")] "The tip was deleted successfully"
                 where
                     getTipsByUser = Database.getTipsByUser connection
 
