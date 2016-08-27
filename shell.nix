@@ -1,4 +1,4 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "default" }:
+{ nixpkgs ? import (fetchTarball https://github.com/NixOS/nixpkgs/archive/b83dee4a6c7dc66ef47b6ac244d36fe3cdd61796.tar.gz) {}, compiler ? "default" }:
 
 let
 
