@@ -37,7 +37,7 @@ module Database where
 
     deleteTip :: Connection -> Text -> Text -> Int -> IO ()
     deleteTip connection channelId userId tipId = do
-        execute connection "DELETE FROM tips WHERE channelId = ? AND userId = ? AND tipId = ?" (channelId, userId, tipId)
+        execute connection "DELETE FROM tips WHERE channelId = ? AND userId = ? AND id = ?" (channelId, userId, tipId)
         return ()
 
     getTipsByUser :: Connection -> Text -> Text -> IO [Tip]
