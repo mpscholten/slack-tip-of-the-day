@@ -49,6 +49,7 @@ module App where
                 ["connect"] -> connect connection request respond
                 ["add"]     -> add connection request respond
                 ["list"]    -> list connection request respond
+                ["delete"]  -> delete connection request respond
         where
             connect connection request respond = do
                     oauthAccess <- Slack.oauthAccess (clientId slackApiCredentials) (clientSecret slackApiCredentials) code
@@ -91,6 +92,19 @@ module App where
                 where
                     getTipsByUser = Database.getTipsByUser connection
 
+            delete connection request respond = do
+                    (params, []) <- parseRequestBody request
+                    ensureRequestIsFromSlack params
+                    let userId = cs $ fromJust $ lookup "user_id" params
+                    let channelId = cs $ fromJust $ lookup "channel_id" params
+                    let tipNumber = read $ cs $ fromJust $ lookup "text" params
+                    tips <- getTipsByUser userId channelId
+                    let selectedTip = fromJust $ lookup tipNumber $ zip [1..] tips
+                    Database.deleteTip connection channelId userId (Database.tipId selectedTip)
+                    respond $ responseLBS status200 [("Content-Type", "text/plain")] ("_Tips added by you:_\n" <> (cs $ intercalate "\n" (map (\(id, content) -> tshow id <> ": " <> Database.tipContent content) $ zip [1..] tips)))
+                where
+                    getTipsByUser = Database.getTipsByUser connection
+
             ensureRequestIsFromSlack :: [(ByteString, ByteString)] -> IO ()
             ensureRequestIsFromSlack params = do
                 let token = cs $ fromJust $ lookup "token" params
@@ -121,6 +135,6 @@ module App where
                                 markAsDelivered channelId (Database.tipId tip)
                         Nothing -> putStrLn "No tip found for channel"
         putStrLn "Deliveries done"
-        
+
 
     parseRequestBody = Network.Wai.Parse.parseRequestBodyEx Network.Wai.Parse.defaultParseRequestBodyOptions Network.Wai.Parse.lbsBackEnd

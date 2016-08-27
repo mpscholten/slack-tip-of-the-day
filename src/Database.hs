@@ -35,6 +35,11 @@ module Database where
         execute connection "INSERT INTO tips (userId, channelId, content) VALUES (?, ?, ?)" (userId, channelId, content)
         return ()
 
+    deleteTip :: Connection -> Text -> Text -> Int -> IO ()
+    deleteTip connection channelId userId tipId = do
+        execute connection "DELETE FROM tips WHERE channelId = ? AND userId = ? AND tipId = ?" (channelId, userId, tipId)
+        return ()
+
     getTipsByUser :: Connection -> Text -> Text -> IO [Tip]
     getTipsByUser connection userId channelId = do
         query connection "SELECT id, channelId, userId, content FROM tips WHERE channelId = ? AND userId = ?" (channelId, userId)
